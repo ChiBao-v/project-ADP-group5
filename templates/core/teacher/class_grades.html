@@ -1,0 +1,1530 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}Quản lý điểm lớp {{ assignment.classroom.name }} - {{ assignment.subject.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hide navigation bar */
+    .navbar {
+        display: none !important;
+    }
+  
+    /* Adjust main content padding */
+    main {
+        padding-top: 0 !important;
+    }
+  
+    :root {
+        --primary-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        --secondary-gradient: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+        --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        --success-gradient: linear-gradient(45deg, #2ecc71, #27ae60);
+        --primary-color: #1e3c72;
+        --text-light: rgba(255, 255, 255, 0.8);
+    }
+  
+    .hero-section {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 2.5rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 2rem 2rem;
+        box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+        position: relative;
+        overflow: hidden;
+    }
+  
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.1;
+        animation: slide 20s linear infinite;
+    }
+  
+    .hero-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: float 3s ease-in-out infinite;
+        background: rgba(255, 255, 255, 0.1);
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        backdrop-filter: blur(5px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+  
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+  
+    .hero-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.3rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        animation: fadeInUp 1s ease-out;
+        letter-spacing: 1px;
+    }
+  
+    .hero-subtitle {
+        font-size: 1rem;
+        opacity: 0;
+        animation: fadeInUp 1s ease-out forwards;
+        animation-delay: 0.3s;
+        font-weight: 300;
+    }
+  
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+  
+    .hero-stats {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        animation: fadeInUp 1s ease-out forwards;
+        animation-delay: 0.6s;
+        opacity: 0;
+    }
+  
+    .hero-stat {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+  
+    .hero-stat:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.2);
+    }
+  
+    .hero-stat-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+    }
+  
+    .hero-stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+  
+    .layout-container {
+        min-height: 100vh;
+        background: #f4f6f9;
+        position: relative;
+        overflow: hidden;
+    }
+  
+    .layout-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%231e3c72' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.1;
+        animation: slide 20s linear infinite;
+        pointer-events: none;
+    }
+  
+    @keyframes slide {
+        from { background-position: 0 0; }
+        to { background-position: 100% 100%; }
+    }
+  
+    .main-content {
+        padding: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+  
+    .stat-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+  
+    .stat-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+  
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--secondary-gradient);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -1;
+    }
+  
+    .stat-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+  
+    .stat-card:hover::before {
+        opacity: 0.05;
+    }
+  
+    .stat-card.blue { border-left: 4px solid #2193b0; }
+    .stat-card.green { border-left: 4px solid #6dd5ed; }
+    .stat-card.yellow { border-left: 4px solid #ff6b6b; }
+    .stat-card.red { border-left: 4px solid #ff8e8e; }
+  
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0.5rem 0;
+        line-height: 1;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+  
+    .stat-title {
+        font-size: 1.1rem;
+        color: #1e3c72;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+  
+    .stat-link {
+        color: #2193b0;
+        text-decoration: none;
+        font-weight: 500;
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+  
+    .stat-link:hover {
+        color: #1e3c72;
+    }
+  
+    .stat-link i {
+        transition: transform 0.3s ease;
+    }
+  
+    .stat-link:hover i {
+        transform: translateX(5px);
+    }
+  
+    .recent-teachers-card {
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  
+    .recent-teachers-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+  
+    .recent-teachers-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        background: var(--primary-gradient);
+    }
+  
+    .recent-teachers-title {
+            font-size: 1.2rem;
+        color: white;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+  
+    .recent-teachers-title i {
+        margin-right: 0.5rem;
+        font-size: 1.3em;
+    }
+  
+    .table {
+        margin: 0;
+    }
+  
+    .table th {
+        border-top: none;
+        color: #1e3c72;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        background: rgba(33, 147, 176, 0.05);
+    }
+  
+    .table td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+        border-color: rgba(0,0,0,0.05);
+    }
+  
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+  
+    .view-btn {
+        padding: 0.5rem;
+        border-radius: 8px;
+        background: rgba(33, 147, 176, 0.1);
+        color: #2193b0;
+        border: none;
+        transition: all 0.4s ease;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+  
+    .view-btn:hover {
+        background: var(--primary-gradient);
+        color: white;
+        transform: translateY(-2px);
+    }
+  
+    .view-all-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.8rem 1.5rem;
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: 2.5rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+    }
+  
+    .view-all-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(30, 60, 114, 0.4);
+        color: white;
+    }
+  
+    .logout-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--primary-gradient);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+    }
+  
+    .logout-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(30, 60, 114, 0.4);
+    }
+  
+    /* Sidebar styles */
+    #sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        height: 100%;
+        width: 280px;
+        background: var(--primary-gradient);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        overflow-y: auto;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+    }
+  
+    #sidebar.active {
+        left: 0;
+    }
+  
+    .sidebar-header {
+        padding: 30px 20px;
+        background: var(--primary-dark);
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        position: relative;
+    }
+  
+    .sidebar-header .user-avatar {
+        width: 90px;
+        height: 90px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid rgba(255,255,255,0.2);
+        transition: all 0.3s;
+    }
+  
+    .sidebar-header .user-avatar:hover {
+        border-color: #3498db;
+        transform: scale(1.05);
+    }
+  
+    .sidebar-header .user-info {
+        color: white;
+    }
+  
+    .sidebar-header .user-info h6 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+  
+    #sidebar .nav-link {
+        padding: 15px 25px;
+        color: var(--text-light);
+        border-left: 4px solid transparent;
+        transition: all 0.3s;
+        margin: 5px 0;
+        border-radius: 0 30px 30px 0;
+    }
+  
+    #sidebar .nav-link:hover,
+    #sidebar .nav-link.active {
+        color: white;
+        background: rgba(255,255,255,0.1);
+        border-left: 4px solid #fff;
+        transform: translateX(10px);
+    }
+  
+    #sidebar .nav-link i {
+        width: 25px;
+        text-align: center;
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+  
+    /* Toggle button */
+    #sidebarCollapse {
+        position: fixed;
+        top: 35px;
+        left: 10px;
+        z-index: 999;
+        border: none;
+        background: var(--primary-gradient);
+        color: white;
+        padding: 12px 15px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(30, 60, 114, 0.2);
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+  
+    #sidebarCollapse:hover {
+        background: var(--primary-gradient);
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(30, 60, 114, 0.3);
+    }
+  
+    #sidebarCollapse i {
+        font-size: 1.2rem;
+        transition: transform 0.3s ease;
+    }
+  
+    #sidebarCollapse:hover i {
+        transform: rotate(180deg);
+    }
+  
+    /* Main content */
+    #content {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-left: 0;
+        padding: 20px;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+  
+    #content.active {
+        margin-left: 280px;
+    }
+  
+    /* Navbar styles */
+    .main-navbar {
+        background: #1e3c72;
+        background: linear-gradient(to right, #1e3c72, #2a5298);
+        padding: 0 2rem;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        height: 90px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .navbar-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        height: 100%;
+    }
+
+    .navbar-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .nav-title {
+        color: white;
+        font-family: 'Segoe UI', 'Open Sans', sans-serif;
+        font-size: 1.7rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .main-navbar {
+            height: 80px;
+            padding: 0.8rem 1rem;
+        }
+
+        .nav-title {
+            font-size: 1.4rem;
+        }
+    }
+
+    /* Close button styles */
+    .sidebar-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+  
+    .sidebar-close:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+        transform: rotate(90deg);
+    }
+  
+    .profile-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+  
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+  
+    .profile-card .card-header {
+        background: var(--primary-gradient);
+        padding: 1.5rem;
+        border: none;
+    }
+  
+    .profile-card .header-title {
+        color: white;
+        font-size: 1.25rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+  
+    .profile-card .card-body {
+        padding: 2rem;
+    }
+  
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+  
+    .form-label {
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
+  
+    .input-group-lg {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+  
+    .input-group-text {
+        background: var(--primary-gradient);
+        border: none;
+        color: white;
+        padding: 0.75rem 1.25rem;
+    }
+  
+    .form-control {
+        border: 1px solid rgba(0,0,0,0.05);
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+  
+    .form-control:focus {
+        box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        border-color: var(--primary-color);
+    }
+  
+    .btn-primary {
+        background: var(--primary-gradient);
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+  
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(30, 60, 114, 0.2);
+    }
+  
+    .btn-warning {
+        background: var(--accent-gradient);
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+  
+    .btn-warning:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
+    }
+  
+    .alert {
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+        border: none;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+    }
+  
+    .alert-success {
+        background: var(--success-gradient);
+        color: white;
+    }
+
+    /* Cập nhật style cho card */
+    .card {
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+
+    .card-header {
+        background: var(--primary-gradient) !important;
+        padding: 1.5rem !important;
+        border: none;
+    }
+
+    .card-header h5 {
+        color: white !important;
+        font-size: 1.25rem;
+        margin: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Navbar duy nhất -->
+<!-- Sidebar Toggle Button -->
+            <button id="sidebarCollapse">
+                <i class="fas fa-bars"></i>
+            </button>
+
+<!-- Sidebar -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+<button class="sidebar-close" id="sidebarClose">
+<i class="fas fa-times"></i>
+</button>
+        <div class="user-avatar">
+            <i class="fas fa-user fa-2x text-white"></i>
+        </div>
+        <div class="user-info">
+            <h6 class="mb-1">{{ teacher.user.get_full_name }}</h6>
+            <small class="text-white">Giáo viên</small>
+        </div>
+    </div>
+
+    <ul class="nav flex-column mt-3">
+        <li class="nav-item">
+<a href="{% url 'teacher_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'teacher_dashboard' %}active{% endif %}">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+<a href="{% url 'teacher_profile' %}" class="nav-link {% if request.resolver_match.url_name == 'teacher_profile' %}active{% endif %}">
+                <i class="fas fa-user-circle"></i>
+                Thông tin cá nhân
+            </a>
+        </li>
+        <li class="nav-item">
+<a href="{% url 'teacher_change_password' %}" class="nav-link {% if request.resolver_match.url_name == 'teacher_change_password' %}active{% endif %}">
+                <i class="fas fa-key"></i>
+                Đổi mật khẩu
+            </a>
+        </li>
+        <li class="nav-item mt-4">
+            <a href="{% url 'logout' %}" class="nav-link text-danger">
+                <i class="fas fa-sign-out-alt"></i>
+                Đăng xuất
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<!-- Overlay -->
+<div class="overlay"></div>
+
+<!-- Alert container -->
+<div class="alert-container"></div>
+
+<!-- Main Content -->
+<div id="content">
+    <div class="container-fluid">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white py-3">
+                <div class="d-flex flex-column">
+                    <h5 class="mb-3 text-primary fw-bold">
+                        <i class="fas fa-graduation-cap me-2"></i>Quản lý điểm: {{ assignment.subject.name }} - {{ assignment.classroom.name }}
+                    </h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="{% url 'teacher_dashboard' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-arrow-left me-1"></i>Quay lại
+                        </a>
+                        <a href="{% url 'teacher_class_students' assignment.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-users me-1"></i>Danh sách SV
+                        </a>
+                        <a href="{% url 'manage_grade_types' assignment.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-list-alt me-1"></i>Quản lý loại điểm
+                        </a>
+                        <button id="saveAllBtn" class="btn btn-primary btn-sm">
+                            <i class="fas fa-save me-1"></i>Lưu tất cả
+                        </button>
+                        <a href="{% url 'upload_grades' assignment.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-file-upload me-1"></i>Tải lên Excel
+                        </a>
+                        <a href="{% url 'download_grades' assignment.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-file-download me-1"></i>Tải xuống Excel
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="mb-4">
+                    <h5>Thông tin:</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Lớp:</strong> {{ assignment.classroom.name }}</p>
+                            <p><strong>Môn học:</strong> {{ assignment.subject.name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Học kỳ:</strong> {{ assignment.semester.name }}</p>
+                            <p><strong>Giáo viên:</strong> {{ assignment.teacher.user.get_full_name }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if students %}
+                    <div class="d-flex justify-content-end mb-2">
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="customFormulaBtn" data-bs-toggle="modal" data-bs-target="#formulaModal">
+                            <i class="fas fa-calculator"></i>
+                            <span class="formula-active-indicator d-none ms-1">•</span>
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Mã SV</th>
+                                    <th>Họ tên</th>
+                                    {% for grade_type in grade_types %}
+                                        <th>
+                                            <span class="grade-header-name" 
+                                                  data-grade-type-id="{{ grade_type.id }}"
+                                                  data-grade-type-name="{{ grade_type.name }}"
+                                                  style="cursor: pointer;" 
+                                                  title="Nhấn để thêm vào công thức">
+                                                {{ grade_type.name }}
+                                            </span>
+                                        </th>
+                                    {% endfor %}
+                                    <th class="average-grade">
+                                        <span>Điểm tổng kết</span>
+                                    </th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                    <tr class="student-row" data-student-id="{{ student.id }}">
+                                        <td>{{ student.student_id }}</td>
+                                        <td>{{ student.name }}</td>
+                                        {% for grade_type in grade_types %}
+                                            <td>
+                                                {% with student_grade=student_grades|get_item:student.id|get_item:'grades'|get_item:grade_type.id %}
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="number" 
+                                                               class="form-control grade-input" 
+                                                               min="0" 
+                                                               max="10" 
+                                                               step="0.1" 
+                                                               value="{{ student_grade.value }}"
+                                                               data-student-id="{{ student.id }}"
+                                                               data-grade-type-id="{{ grade_type.id }}"
+                                                               data-grade-id="{{ student_grade.id|default_if_none:'' }}"
+                                                               data-original-value="{{ student_grade.value }}"
+                                                               data-version="1"
+                                                        >
+                                                    </div>
+                                                {% endwith %}
+                                            </td>
+                                        {% endfor %}
+                                        <td class="average-grade">
+                                            <span class="average-value" data-student-id="{{ student.id }}">-</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary btn-save-row">
+                                                <i class="fas fa-save"></i> Lưu
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary view-history" data-student-id="{{ student.id }}">
+                                                <i class="fas fa-history"></i> Lịch sử
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>Không có sinh viên nào trong lớp này.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for grade history -->
+<div class="modal fade" id="historyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Lịch sử điểm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="history-content">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fas fa-trash me-2"></i>Xóa điểm</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa điểm này không?</p>
+                <p>Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Grade Formula Modal -->
+<div class="modal fade" id="formulaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--primary-gradient)">
+                <h5 class="modal-title text-white"><i class="fas fa-calculator me-2"></i>Tùy chỉnh công thức tính điểm tổng kết</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Hướng dẫn:</strong> Nhập công thức tính điểm theo ý muốn. Nhấn vào tên cột điểm để thêm vào công thức.
+                </div>
+                
+                <div class="mb-3">
+                    <label for="customFormula" class="form-label">Công thức tính điểm:</label>
+                    <div class="input-group mb-3">
+                        <textarea id="customFormula" class="form-control" rows="3" placeholder="Ví dụ: ([Giữa kỳ] + [Cuối kỳ]*2)/3"></textarea>
+                        <button class="btn btn-outline-secondary" type="button" id="clearFormula">Xóa</button>
+                    </div>
+                    <div class="form-text">Sử dụng các phép toán: +, -, *, /, (, ). Ví dụ: ([Giữa kỳ] + [Thực hành])/2</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Nhấn vào loại điểm để thêm vào công thức:</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for grade_type in grade_types %}
+                        <button type="button" class="btn btn-sm btn-outline-primary grade-type-btn" 
+                                data-grade-type-name="{{ grade_type.name }}"
+                                data-grade-type-id="{{ grade_type.id }}">
+                            {{ grade_type.name }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="validateFormula" checked>
+                        <label class="form-check-label" for="validateFormula">
+                            Kiểm tra tính hợp lệ của công thức
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="saveFormula">Áp dụng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+    const sidebarCollapse = document.getElementById('sidebarCollapse');
+    const sidebarClose = document.getElementById('sidebarClose');
+    const overlay = document.querySelector('.overlay');
+
+    function toggleSidebar() {
+        sidebar.classList.toggle('active');
+        content.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+
+    sidebarCollapse.addEventListener('click', toggleSidebar);
+    sidebarClose.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+
+    // Close sidebar on mobile when clicking a nav link
+    const navLinks = document.querySelectorAll('#sidebar .nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        });
+    });
+
+    // Close sidebar when window is resized
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+            toggleSidebar();
+        }
+    });
+
+    let customFormulaString = '';
+    let gradeTypeNames = {};
+
+    // Function to collect grade type names
+    function initializeGradeTypes() {
+        // Initialize from buttons
+        document.querySelectorAll('.grade-type-btn').forEach(btn => {
+            const gradeTypeId = btn.getAttribute('data-grade-type-id');
+            const gradeTypeName = btn.getAttribute('data-grade-type-name');
+            gradeTypeNames[gradeTypeId] = gradeTypeName;
+        });
+        
+        // Initialize from headers as well
+        document.querySelectorAll('.grade-header-name').forEach(header => {
+            const gradeTypeId = header.getAttribute('data-grade-type-id');
+            const gradeTypeName = header.getAttribute('data-grade-type-name');
+            gradeTypeNames[gradeTypeId] = gradeTypeName;
+        });
+    }
+    
+    // Load formula from localStorage
+    function loadFormula() {
+        const assignmentId = {{ assignment.id }};
+        const savedFormula = localStorage.getItem(`customFormula_${assignmentId}`);
+        if (savedFormula) {
+            customFormulaString = savedFormula;
+            console.log(`Loaded formula from localStorage: ${customFormulaString}`);
+            
+            // Calculate all student averages after formula is loaded
+            setTimeout(() => {
+                document.querySelectorAll('tr.student-row').forEach(row => {
+                    calculateAverage(row.getAttribute('data-student-id'));
+                });
+            }, 100);
+        }
+        updateFormulaActiveIndicator();
+    }
+    
+    // Initialize in the proper order
+    initializeGradeTypes();
+    loadFormula();
+
+    // Function to calculate average grade using custom formula
+    function calculateAverage(studentId) {
+        calculateCustomFormula(studentId);
+    }
+    
+    // Calculate average based on custom formula
+    function calculateCustomFormula(studentId) {
+        if (!customFormulaString) {
+            // Default formula: simple average of all grades
+            calculateSimpleAverage(studentId);
+            return;
+        }
+        
+        let studentGrades = {};
+        let formulaString = customFormulaString;
+        let allGradesAvailable = true;
+        
+        // Get all grade inputs for this student
+        $(`input[data-student-id="${studentId}"]`).each(function() {
+            const value = $(this).val();
+            const gradeTypeId = $(this).data('grade-type-id');
+            const gradeTypeName = gradeTypeNames[gradeTypeId];
+            
+            if (value !== '' && value !== null) {
+                studentGrades[gradeTypeId] = parseFloat(value);
+                
+                // Replace [GradeTypeName] with actual value
+                const regex = new RegExp('\\[' + gradeTypeName + '\\]', 'g');
+                formulaString = formulaString.replace(regex, studentGrades[gradeTypeId]);
+            } else if (formulaString.includes(`[${gradeTypeName}]`)) {
+                // If grade is missing but needed in formula
+                allGradesAvailable = false;
+            }
+        });
+        
+        // Update average display
+        const averageSpan = $(`.average-value[data-student-id="${studentId}"]`);
+        
+        if (allGradesAvailable) {
+            try {
+                // Evaluate the formula
+                // Replace any remaining grade placeholders with 0
+                formulaString = formulaString.replace(/\[[^\]]+\]/g, '0');
+                
+                // Check for unneeded characters to prevent code injection
+                if (!/^[0-9+\-*/(). ]+$/.test(formulaString)) {
+                    throw new Error('Invalid characters in formula');
+                }
+                
+                const result = eval(formulaString);
+                
+                if (isNaN(result) || !isFinite(result)) {
+                    throw new Error('Calculation error');
+                }
+                
+                // Show the final average
+                const average = parseFloat(result).toFixed(2);
+                averageSpan.text(average);
+                averageSpan.removeClass('incomplete-grades');
+            } catch (e) {
+                console.error('Formula evaluation error:', e);
+                averageSpan.text('Lỗi công thức');
+                averageSpan.addClass('incomplete-grades');
+            }
+        } else {
+            averageSpan.text('Chưa đủ điểm');
+            averageSpan.addClass('incomplete-grades');
+        }
+    }
+    
+    // Calculate a simple average when no custom formula is set
+    function calculateSimpleAverage(studentId) {
+        let total = 0;
+        let count = 0;
+        
+        // Get all grade inputs for this student
+        $(`input[data-student-id="${studentId}"]`).each(function() {
+            const value = $(this).val();
+            
+            if (value !== '' && value !== null) {
+                total += parseFloat(value);
+                count++;
+            }
+        });
+        
+        // Update average display
+        const averageSpan = $(`.average-value[data-student-id="${studentId}"]`);
+        
+        if (count > 0) {
+            const average = (total / count).toFixed(2);
+            averageSpan.text(average);
+            averageSpan.removeClass('incomplete-grades');
+        } else {
+            averageSpan.text('Chưa có điểm');
+            averageSpan.addClass('incomplete-grades');
+        }
+    }
+
+    // Calculate initial averages (immediate display)
+    $('.grade-input').each(function() {
+        const studentId = $(this).data('student-id');
+        calculateAverage(studentId);
+    });
+    
+    // Calculate initial averages for all students again right after page load
+    // This ensures the custom formula is properly applied when page is fully loaded
+    window.addEventListener('load', function() {
+        // Delay to ensure all elements are fully loaded
+        setTimeout(() => {
+            // Apply the saved formula from localStorage if it exists
+            document.querySelectorAll('tr.student-row').forEach(row => {
+                const studentId = row.getAttribute('data-student-id');
+                calculateAverage(studentId);
+            });
+            console.log('Applied formula to all students on page load');
+        }, 200);
+    });
+
+    // Add event listener for input changes
+    $('.grade-input').on('input', function() {
+        const studentId = $(this).data('student-id');
+        calculateAverage(studentId);
+    });
+    
+    // Add event listener for grade type buttons (to insert into formula)
+    document.querySelectorAll('.grade-type-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const gradeTypeName = this.getAttribute('data-grade-type-name');
+            const formulaTextarea = document.getElementById('customFormula');
+            const currentPos = formulaTextarea.selectionStart;
+            const currentValue = formulaTextarea.value;
+            
+            // Insert grade type at cursor position
+            const newValue = 
+                currentValue.substring(0, currentPos) + 
+                `[${gradeTypeName}]` + 
+                currentValue.substring(formulaTextarea.selectionEnd);
+            
+            formulaTextarea.value = newValue;
+            
+            // Set cursor position after inserted text
+            const newPos = currentPos + gradeTypeName.length + 2; // +2 for brackets
+            formulaTextarea.focus();
+            formulaTextarea.setSelectionRange(newPos, newPos);
+        });
+    });
+    
+    // Add event listener for clickable column headers
+    document.querySelectorAll('.grade-header-name').forEach(header => {
+        header.addEventListener('click', function() {
+            const gradeTypeName = this.getAttribute('data-grade-type-name');
+            
+            // Open the formula modal
+            const formulaModal = new bootstrap.Modal(document.getElementById('formulaModal'));
+            formulaModal.show();
+            
+            // Insert the grade type into the formula
+            const formulaTextarea = document.getElementById('customFormula');
+            const currentValue = formulaTextarea.value;
+            
+            // Add the grade type at the end or with appropriate operators
+            let newValue = currentValue;
+            if (currentValue === '') {
+                newValue = `[${gradeTypeName}]`;
+            } else if (currentValue.endsWith(')') || 
+                       /[0-9]$/.test(currentValue) || 
+                       currentValue.endsWith(']')) {
+                // If formula ends with a number or closing bracket, add a plus sign
+                newValue = `${currentValue} + [${gradeTypeName}]`;
+            } else if (currentValue.endsWith(' ')) {
+                // Just append if there's already a space
+                newValue = `${currentValue}[${gradeTypeName}]`;
+            } else {
+                // Otherwise add a space before adding the grade type
+                newValue = `${currentValue} [${gradeTypeName}]`;
+            }
+            
+            formulaTextarea.value = newValue;
+            formulaTextarea.focus();
+            formulaTextarea.setSelectionRange(newValue.length, newValue.length);
+        });
+    });
+    
+    // Update formula textarea when modal is opened
+    $('#formulaModal').on('shown.bs.modal', function() {
+        const formulaTextarea = document.getElementById('customFormula');
+        formulaTextarea.value = customFormulaString;
+        formulaTextarea.focus();
+    });
+    
+    // Clear formula button
+    document.getElementById('clearFormula').addEventListener('click', function() {
+        document.getElementById('customFormula').value = '';
+    });
+    
+    // Save formula
+    document.getElementById('saveFormula').addEventListener('click', function() {
+        const formula = document.getElementById('customFormula').value.trim();
+        const assignmentId = {{ assignment.id }};
+        
+        if (!formula) {
+            customFormulaString = '';
+            localStorage.setItem(`customFormula_${assignmentId}`, '');
+            showAlert('Công thức đã được đặt lại thành tính trung bình cộng.');
+            updateFormulaActiveIndicator();
+            document.querySelectorAll('tr.student-row').forEach(row => {
+                calculateAverage(row.getAttribute('data-student-id'));
+            });
+            $('#formulaModal').modal('hide');
+            return;
+        }
+
+        // Validate formula if option is checked
+        if (document.getElementById('validateFormula').checked) {
+            try {
+                // Test formula with sample values
+                let testFormula = formula;
+                
+                // Replace all grade placeholders with 5 (test value)
+                testFormula = testFormula.replace(/\[[^\]]+\]/g, '5');
+                
+                // Check for unneeded characters to prevent code injection
+                if (!/^[0-9+\-*/(). ]+$/.test(testFormula)) {
+                    throw new Error('Invalid characters in formula');
+                }
+                
+                const result = eval(testFormula);
+                
+                if (isNaN(result) || !isFinite(result)) {
+                    throw new Error('Calculation error');
+                }
+            } catch (e) {
+                showAlert('Công thức không hợp lệ. Vui lòng kiểm tra lại.', 'danger');
+                return;
+            }
+        }
+        
+        customFormulaString = formula;
+        localStorage.setItem(`customFormula_${assignmentId}`, formula);
+        showAlert('Công thức đã được lưu thành công!');
+        updateFormulaActiveIndicator();
+        
+        // Recalculate all student averages
+        document.querySelectorAll('tr.student-row').forEach(row => {
+            calculateAverage(row.getAttribute('data-student-id'));
+        });
+        
+        $('#formulaModal').modal('hide');
+    });
+    
+    // Function to show alert in top-right corner
+    function showAlert(message, type = 'success') {
+        const alertContainer = $('.alert-container');
+        const alert = $('<div>')
+            .addClass(`alert alert-${type} alert-dismissible fade show`)
+            .html(`
+                <i class="fas fa-check-circle me-2"></i>${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `);
+        alertContainer.append(alert);
+        setTimeout(() => {
+            alert.remove();
+        }, 3000);
+    }
+
+    // Update formula active indicator
+    function updateFormulaActiveIndicator() {
+        const formulaBtn = document.getElementById('customFormulaBtn');
+        const formulaTextarea = document.getElementById('customFormula');
+        const formula = formulaTextarea.value.trim();
+        const active = formula !== '';
+        formulaBtn.classList.toggle('d-none', active);
+        formulaBtn.querySelector('.formula-active-indicator').classList.toggle('d-none', active);
+    }
+
+    // Add event listener for save button
+    $('.btn-save-row').on('click', function() {
+        const row = $(this).closest('tr');
+        const studentId = row.data('student-id');
+        const inputs = row.find('.grade-input');
+        const promises = [];
+
+        inputs.each(function() {
+            const input = $(this);
+            const gradeTypeId = input.data('grade-type-id');
+            const gradeId = input.data('grade-id');
+            const value = input.val();
+            const version = input.data('version');
+
+            if (value !== input.data('original-value')) {
+                const promise = $.ajax({
+                    url: '{% url "update_grade" %}',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        student_id: studentId,
+                        grade_type_id: gradeTypeId,
+                        grade_id: gradeId,
+                        value: value,
+                        version: version
+                    })
+                });
+
+                promises.push(promise);
+            }
+        });
+
+        if (promises.length > 0) {
+            Promise.all(promises)
+                .then(responses => {
+                    // Update data attributes with new values
+                    responses.forEach(response => {
+                        if (response.success) {
+                            const input = row.find(`input[data-grade-type-id="${response.grade_type_id}"]`);
+                            input.data('grade-id', response.grade_id);
+                            input.data('original-value', input.val());
+                            input.data('version', response.version);
+                        }
+                    });
+                    showAlert('Điểm đã được lưu thành công!');
+                })
+                .catch(error => {
+                    console.error('Error saving grades:', error);
+                    showAlert('Có lỗi xảy ra khi lưu điểm. Vui lòng thử lại.', 'danger');
+                });
+        }
+    });
+
+    // Add event listener for save all button
+    $('#saveAllBtn').on('click', function() {
+        const saveButtons = $('.btn-save-row');
+        let completedSaves = 0;
+        let totalSaves = saveButtons.length;
+        
+        saveButtons.each(function() {
+            const button = $(this);
+            const row = button.closest('tr');
+            const studentId = row.data('student-id');
+            const inputs = row.find('.grade-input');
+            const promises = [];
+
+            inputs.each(function() {
+                const input = $(this);
+                const gradeTypeId = input.data('grade-type-id');
+                const gradeId = input.data('grade-id');
+                const value = input.val();
+                const version = input.data('version');
+
+                if (value !== input.data('original-value')) {
+                    const promise = $.ajax({
+                        url: '{% url "update_grade" %}',
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            student_id: studentId,
+                            grade_type_id: gradeTypeId,
+                            grade_id: gradeId,
+                            value: value,
+                            version: version
+                        })
+                    });
+
+                    promises.push(promise);
+                }
+            });
+
+            if (promises.length > 0) {
+                Promise.all(promises)
+                    .then(responses => {
+                        // Update data attributes with new values
+                        responses.forEach(response => {
+                            if (response.success) {
+                                const input = row.find(`input[data-grade-type-id="${response.grade_type_id}"]`);
+                                input.data('grade-id', response.grade_id);
+                                input.data('original-value', input.val());
+                                input.data('version', response.version);
+                            }
+                        });
+                        completedSaves++;
+                        if (completedSaves === totalSaves) {
+                            showAlert('Đã lưu tất cả điểm thành công!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error saving grades:', error);
+                        showAlert('Có lỗi xảy ra khi lưu điểm. Vui lòng thử lại.', 'danger');
+                    });
+            } else {
+                completedSaves++;
+                if (completedSaves === totalSaves) {
+                    showAlert('Đã lưu tất cả điểm thành công!');
+                }
+            }
+        });
+    });
+
+    // Add event listener for view history button
+    $('.view-history').on('click', function() {
+        const studentId = $(this).data('student-id');
+        const historyModal = new bootstrap.Modal(document.getElementById('historyModal'));
+        const historyContent = document.getElementById('history-content');
+        
+        // Show loading spinner
+        historyContent.innerHTML = `
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Đang tải...</span>
+                </div>
+            </div>
+        `;
+        
+        // Show modal
+        historyModal.show();
+        
+        // Fetch grade history
+        $.ajax({
+            url: '{% url "grade_history" %}',
+            method: 'GET',
+            data: {
+                student_id: studentId,
+                assignment_id: {{ assignment.id }}
+            }
+        })
+        .then(response => {
+            if (response.success) {
+                // Server returns HTML directly
+                historyContent.innerHTML = response.html;
+            } else {
+                historyContent.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>${response.error || 'Có lỗi xảy ra khi tải lịch sử điểm.'}
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching grade history:', error);
+            historyContent.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>Có lỗi xảy ra khi tải lịch sử điểm.
+                </div>
+            `;
+        });
+    });
+});
+</script>
+{% endblock %} 
