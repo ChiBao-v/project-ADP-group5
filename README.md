@@ -57,31 +57,7 @@ project-ADP-group5/
 ```
 
 ---
-- Vì lý do bảo mật, các tệp sau đã được ẩn khỏi GitHub và được lưu trữ riêng trong thư mục key/ trên Google Drive:  
-    core/firebase/ — Cấu hình Firebase cho thông báo đẩy  
-    credentials.json — Thông tin xác thực Gmail API  
-    token.json — Token xác thực cho dịch vụ Gmail  
-- Lưu ý: Khi triển khai hoặc chạy hệ thống, bạn cần tải các tệp này từ Drive và đặt đúng vị trí như cấu trúc ở trên.  
----
-
-##  Hướng dẫn cài đặt
-
-### 1. Clone dự án
-```bash
-git clone https://github.com/ChiBao-v/project-ADP-group5
-cd project-ADP-group5
-```
-### 2. Tạo môi trường ảo Python
-```bash
-python -m venv venv
-source venv/bin/activate        # Đối với Linux/macOS
-venv\Scripts\activate           # Đối với Windows
-```
-### 3. Cài đặt các thư viện phụ thuộc
-```bash
-pip install -r requirements.txt
-```
-### 4. Chạy server
+- V3. Chạy server
 ```bash
 python manage.py runserver
 ```
