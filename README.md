@@ -55,12 +55,14 @@ project-ADP-group5/
 ├── requirements.txt         # Danh sách các thư viện cần cài  
 └── token.json               # Token xác thực Gmail API (sinh ra khi xác thực)  
 ```
-Vì lý do bảo mật, các tệp sau đã được ẩn khỏi GitHub và được lưu trữ riêng trong thư mục key/ trên Google Drive:  
+
+---
+- Vì lý do bảo mật, các tệp sau đã được ẩn khỏi GitHub và được lưu trữ riêng trong thư mục key/ trên Google Drive:  
     core/firebase/ — Cấu hình Firebase cho thông báo đẩy  
     credentials.json — Thông tin xác thực Gmail API  
     token.json — Token xác thực cho dịch vụ Gmail  
-Lưu ý: Khi triển khai hoặc chạy hệ thống, bạn cần tải các tệp này từ Drive và đặt đúng vị trí như cấu trúc ở trên.  
-
+- Lưu ý: Khi triển khai hoặc chạy hệ thống, bạn cần tải các tệp này từ Drive và đặt đúng vị trí như cấu trúc ở trên.  
+---
 
 ##  Hướng dẫn cài đặt
 
