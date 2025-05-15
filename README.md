@@ -36,7 +36,7 @@
 ---
 
 ## Cấu trúc thư mục
-
+```bash
 project-ADP-group5/  
 │  
 ├── core/                     # Ứng dụng con: Xử lý logic chính (models, views, urls, v.v.)  
@@ -54,7 +54,7 @@ project-ADP-group5/
 ├── README.md                # File mô tả dự án (hiển thị trên GitHub)  
 ├── requirements.txt         # Danh sách các thư viện cần cài  
 └── token.json               # Token xác thực Gmail API (sinh ra khi xác thực)  
-  
+```
 Vì lý do bảo mật, các tệp sau đã được ẩn khỏi GitHub và được lưu trữ riêng trong thư mục key/ trên Google Drive:  
     core/firebase/ — Cấu hình Firebase cho thông báo đẩy  
     credentials.json — Thông tin xác thực Gmail API  
