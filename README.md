@@ -79,7 +79,3 @@ pip install -r requirements.txt
 ```bash
 python manage.py runserver
 ```
-
-
-python manage.py runserver
-```
