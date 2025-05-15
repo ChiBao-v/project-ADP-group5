@@ -1310,21 +1310,24 @@ navigator.serviceWorker.register('/static/firebase-messaging-sw.js')
 });
 
   // Khi nhận thông báo từ server (foreground)
-  messaging.onMessage(function(payload) {
+    messaging.onMessage(function(payload) { 
     console.log('🔔 Thông báo nhận được:', payload);
     const { title, body } = payload.notification;
+    const notifId = payload.data && payload.data.id ? payload.data.id : title + body;
 
-    // Hiển thị popup thông báo
-    if (Notification.permission === "granted") {
-      new Notification(title, { body });
+    // Kiểm tra nếu thông báo này đã hiện chưa
+    if (!sessionStorage.getItem('notif_' + notifId)) {
+        if (Notification.permission === "granted") {
+            new Notification(title, { body });
+        }
+        alert("🔔 Bạn vừa nhận được một thông báo: " + title + "\n" + body);
+        sessionStorage.setItem('notif_' + notifId, 'shown');
     }
-
-    alert("🔔 Bạn vừa nhận được một thông báo: " + title + "\n" + body);
 
     // Hiện dấu chấm vàng trên icon chuông
     const dot = document.getElementById("notif-dot");
     if (dot) dot.classList.remove("d-none");
-  });
+});
 </script>
 
 

@@ -1,6 +1,19 @@
-Django==4.1.7
+# Django and core packages
+Django==4.2.10
+pillow==10.2.0
 openpyxl==3.1.2
-pillow==10.2.0 
+
+# Firebase
 firebase-admin>=6.0.0
-# django-packages
-django-recaptcha
+
+# Django packages
+django-recaptcha==3.0.0  # bản tương thích tốt với Django 4.2
+django-cors-headers==3.14.0
+
+# Google API packages
+google-api-python-client==2.108.0
+google-auth-httplib2==0.1.1
+google-auth-oauthlib==1.1.0
+
+# Web server
+gunicorn==20.1.0
