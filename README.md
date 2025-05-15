@@ -37,48 +37,49 @@
 
 ## Cấu trúc thư mục
 
-project-ADP-group5/
-│
-├── core/                     # Ứng dụng con: Xử lý logic chính (models, views, urls, v.v.)
-├── grade_management/         # Thư mục cấu hình Django (settings.py, urls.py, wsgi.py, v.v.)
-├── images/                   # Thư mục chứa hình ảnh tĩnh (nếu có)
-├── static/                   # Thư mục chứa các file tĩnh (CSS, JS, ảnh,...)
-├── templates/                # Thư mục chứa các template HTML
-│
-├── .dockerignore            # File cấu hình Docker để loại trừ file/thư mục không cần thiết
-├── credentials.json         # Thông tin xác thực Gmail API (nên bảo mật)
-├── db.sqlite3               # Cơ sở dữ liệu SQLite
-├── Dockerfile               # File cấu hình Docker
-├── manage.py                # File quản lý Django (chạy server, migrate, v.v.)
-├── proposal.md              # Tài liệu đề xuất dự án
-├── README.md                # File mô tả dự án (hiển thị trên GitHub)
-├── requirements.txt         # Danh sách các thư viện cần cài
-└── token.json               # Token xác thực Gmail API (sinh ra khi xác thực)
-
-Vì lý do bảo mật, các tệp sau đã được ẩn khỏi GitHub và được lưu trữ riêng trong thư mục key/ trên Google Drive:
-    core/firebase/ — Cấu hình Firebase cho thông báo đẩy
-    credentials.json — Thông tin xác thực Gmail API
-    token.json — Token xác thực cho dịch vụ Gmail
-Lưu ý: Khi triển khai hoặc chạy hệ thống, bạn cần tải các tệp này từ Drive và đặt đúng vị trí như cấu trúc ở trên.
+project-ADP-group5/  
+│  
+├── core/                     # Ứng dụng con: Xử lý logic chính (models, views, urls, v.v.)  
+├── grade_management/         # Thư mục cấu hình Django (settings.py, urls.py, wsgi.py, v.v.)    
+├── images/                   # Thư mục chứa hình ảnh tĩnh (nếu có)  
+├── static/                   # Thư mục chứa các file tĩnh (CSS, JS, ảnh,...)  
+├── templates/                # Thư mục chứa các template HTML  
+│  
+├── .dockerignore            # File cấu hình Docker để loại trừ file/thư mục không cần thiết  
+├── credentials.json         # Thông tin xác thực Gmail API (nên bảo mật)  
+├── db.sqlite3               # Cơ sở dữ liệu SQLite  
+├── Dockerfile               # File cấu hình Docker  
+├── manage.py                # File quản lý Django (chạy server, migrate, v.v.)  
+├── proposal.md              # Tài liệu đề xuất dự án    
+├── README.md                # File mô tả dự án (hiển thị trên GitHub)  
+├── requirements.txt         # Danh sách các thư viện cần cài  
+└── token.json               # Token xác thực Gmail API (sinh ra khi xác thực)  
+  
+Vì lý do bảo mật, các tệp sau đã được ẩn khỏi GitHub và được lưu trữ riêng trong thư mục key/ trên Google Drive:  
+    core/firebase/ — Cấu hình Firebase cho thông báo đẩy  
+    credentials.json — Thông tin xác thực Gmail API  
+    token.json — Token xác thực cho dịch vụ Gmail  
+Lưu ý: Khi triển khai hoặc chạy hệ thống, bạn cần tải các tệp này từ Drive và đặt đúng vị trí như cấu trúc ở trên.  
 
 
 ##  Hướng dẫn cài đặt
 
 ### 1. Clone dự án
-
 ```bash
 git clone https://github.com/ChiBao-v/project-ADP-group5
 cd project-ADP-group5
-
-## 2. Tạo môi trường ảo Python
-
+```
+### 2. Tạo môi trường ảo Python
 ```bash
 python -m venv venv
 source venv/bin/activate        # Đối với Linux/macOS
 venv\Scripts\activate           # Đối với Windows
-
-## 3. Cài đặt các thư viện phụ thuộc
+```
+### 3. Cài đặt các thư viện phụ thuộc
+```bash
 pip install -r requirements.txt
-
-## 4. Chạy server
+```
+### 4. Chạy server
+```bash
 python manage.py runserver
+```
