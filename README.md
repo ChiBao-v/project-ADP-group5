@@ -19,6 +19,8 @@
 | Võ Tấn Bình  | [binhvotan907@gmail.com]       | Gmail API - Gửi email thông báo |
 | Vũ Hải Ninh          | [vuninhghjk@gmail.com]       | Docker Based Deployment                 |
 
+---
+
 ## 2. GIỚI THIỆU
 
 **Hệ thống quản lý điểm học sinh** là một ứng dụng web phát triển bằng **Django Framework**, giúp các trường học dễ dàng quản lý thông tin học sinh, giáo viên và điểm số. Hệ thống cung cấp giao diện đơn giản, thân thiện với người dùng và hỗ trợ phân quyền rõ ràng.
@@ -77,6 +79,8 @@
     <i>Hình 6: Dashboard dành cho Student.</i>
   
     </div>
+
+---
 
 ## 5. CÔNG NGHỆ SỬ DỤNG
 
