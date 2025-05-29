@@ -10,6 +10,8 @@
 6. Cấu trúc thư mục
 7. Hướng dẫn cài đặt
 
+---
+
 ## 1. THÔNG TIN NHÓM
 
 | Họ và tên              | Email                        | Vai trò                |
